@@ -11,7 +11,9 @@ class ProductListSerializerTest(TestCase):
     def test_contains_expected_fields(self):
         serializer = ProductListSerializer(instance=self.products[0])
         data = serializer.data
-        self.assertEqual(set(data.keys()), {"id", "title", "created_at", "slug"})
+        self.assertEqual(
+            set(data.keys()), {"id", "title", "created_at", "slug", "price"}
+        )
 
     def test_product_list_serializer(self):
         expected_data = [
@@ -22,6 +24,7 @@ class ProductListSerializerTest(TestCase):
                     "%Y-%m-%dT%H:%M:%S.%fZ"
                 ),
                 "slug": self.products[0].slug,
+                "price": self.products[0].price,
             },
             {
                 "id": self.products[1].id,
@@ -30,6 +33,7 @@ class ProductListSerializerTest(TestCase):
                     "%Y-%m-%dT%H:%M:%S.%fZ"
                 ),
                 "slug": self.products[1].slug,
+                "price": self.products[1].price,
             },
         ]
 
@@ -41,3 +45,4 @@ class ProductListSerializerTest(TestCase):
                 item.get("created_at"), expected_data[idx].get("created_at")
             )
             self.assertEqual(item.get("slug"), expected_data[idx].get("slug"))
+            self.assertEqual(item.get("price"), str(expected_data[idx].get("price")))

@@ -27,7 +27,9 @@ class ProductModelTest(TestCase):
         title = "test-xx"
         description = "test"
         price = Decimal(2500.245)
-        product = Product.objects.create(title=title, description=description, price=price)
+        product = Product.objects.create(
+            title=title, description=description, price=price
+        )
         self.assertEqual(product.title, title)
         self.assertEqual(product.description, description)
         self.assertAlmostEquals(product.price, price)

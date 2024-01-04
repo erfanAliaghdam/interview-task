@@ -12,6 +12,9 @@ step 2:
 
 note: you can use -y for answering all questions yes by default...
 
+## test coverage
+> coverage run manage.py test & coverage report -m
+
 ## development users
 
 superuser :

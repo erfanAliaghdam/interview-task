@@ -22,12 +22,9 @@ class CartItemModelTest(TestCase):
         self.assertTrue(hasattr(obj, "quantity"))
 
     def test_create_cart_item_successfully(self):
-        user = baker.make(get_user_model())
         new_product = baker.make(Product)
         cart_item = CartItem.objects.create(
-            cart=self.cart,
-            product=new_product,
-            quantity=2
+            cart=self.cart, product=new_product, quantity=2
         )
         self.assertEqual(cart_item.cart.id, self.cart.id)
         self.assertEqual(cart_item.product.id, new_product.id)

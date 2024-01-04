@@ -12,7 +12,7 @@ class ProductRepositoryTest(TestCase):
         self.repository = ProductRepository()
 
     def test_check_if_product_with_same_slug_exists_by_id_and_slug_with_existing_product_id(
-            self
+        self,
     ):
         self.assertFalse(
             self.repository.check_if_product_with_same_slug_exists_by_id_and_slug(

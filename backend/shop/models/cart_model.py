@@ -5,9 +5,7 @@ from shop.models import Product
 
 class Cart(models.Model):
     user = models.OneToOneField(
-        get_user_model(),
-        on_delete=models.CASCADE,
-        related_name="cart"
+        get_user_model(), on_delete=models.CASCADE, related_name="cart"
     )
 
     def __str__(self):
@@ -19,15 +17,8 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(
-        Cart,
-        on_delete=models.CASCADE,
-        related_name="items"
-    )
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE
-    )
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
