@@ -12,9 +12,9 @@ class ProductRepositoryTest(TestCase):
         self.repository = ProductRepository()
 
     def test_check_if_product_with_same_slug_exists_by_id_and_slug_with_existing_product_id(
-        self,
+            self
     ):
-        self.assertTrue(
+        self.assertFalse(
             self.repository.check_if_product_with_same_slug_exists_by_id_and_slug(
                 product_id=self.product.id, slug=self.product.slug
             )
@@ -29,3 +29,13 @@ class ProductRepositoryTest(TestCase):
                 product_id=self.product.id, slug="xx"
             )
         )
+
+    def test_get_all_products(self):
+        result = self.repository.get_all_products()
+        all_products = Product.objects.all()
+        self.assertEqual(result.first().id, all_products.first().id)
+        self.assertEqual(result.count(), all_products.count())
+
+    def test_get_product_by_slug(self):
+        product = self.repository.get_product_by_slug(slug=self.product.slug)
+        self.assertEqual(product.id, self.product.id)
