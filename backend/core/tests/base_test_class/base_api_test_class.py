@@ -17,5 +17,5 @@ class BaseAPITestClass(BaseTestClass):
         super().setUp()
         self.client = APIClient()
 
-    def authenticate_user(self):
-        self.client.force_authenticate(self.user)
+    def authenticate_user(self, user):
+        self.client.force_authenticate(user)

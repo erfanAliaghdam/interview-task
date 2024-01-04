@@ -1,0 +1,2 @@
+from .product_list_serializer import ProductListSerializer
+from .product_detail_serializer import ProductDetailSerializer
