@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     # apps
     "user.apps.UserConfig",
     "core.apps.CoreConfig",
+    "shop.apps.ShopConfig",
     # third party apps
     "rest_framework",
     "rest_framework.authtoken",
