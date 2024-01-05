@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.test import TestCase
@@ -35,3 +37,17 @@ class OrderItemModelTest(TestCase):
         self.assertEqual(order_item.product.id, new_product.id)
         self.assertEqual(order_item.quantity, 2)
         self.assertAlmostEqual(order_item.price, new_product.price)
+
+    @patch("shop.models.order_model.user_order_checked_email.delay")
+    def test_send_email_on_order_status_change_to_checked(self, email_mock):
+        order = baker.make(Order)
+        self.assertEqual(email_mock.call_count, 0)
+        order.status = Order.PENDING
+        order.save()
+        self.assertEqual(email_mock.call_count, 0)
+        order.status = Order.CHECKED
+        order.save()
+        self.assertEqual(email_mock.call_count, 1)
+        order.status = Order.CHECKED
+        order.save()
+        self.assertEqual(email_mock.call_count, 1)

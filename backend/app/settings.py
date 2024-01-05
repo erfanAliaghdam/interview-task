@@ -1,6 +1,7 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -124,7 +125,19 @@ REST_FRAMEWORK = {
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND")
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
 
+# Celery Beat configuration
+CELERY_IMPORTS = ['shop.celery_tasks.beat_tasks.check_orders_task']
+CELERY_BEAT_SCHEDULE = {
+    'checked_orders': {
+        'task': 'shop.celery_tasks.beat_tasks.check_orders_task.checked_orders',
+        'schedule': crontab(hour=20, minute=0)
+    },
+}
 # user unique identifier prefix
 USER_IDENTIFIER_PREFIX = os.environ.get("USER_IDENTIFIER_PREFIX", "user")
 
@@ -132,4 +145,8 @@ AUTH_USER_MODEL = "user.User"
 
 GROUP_LIST = ["Client"]
 
+FROM_EMAIL = os.environ.get("FROM_EMAIL", "example@example.com")
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SUPERUSER_EMAIL = os.environ.get("SUPERUSER_EMAIL", "superuser@example.com")

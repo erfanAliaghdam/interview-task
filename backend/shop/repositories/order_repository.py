@@ -29,3 +29,9 @@ class OrderRepository:
             )
         order_items = OrderItem.objects.bulk_create(order_items)
         return order_items
+
+    def get_checked_order_count_by_created_at_range(self, start, finish):
+        return Order.objects.filter(
+            status=Order.CHECKED,
+            created_at__range=(start, finish)
+        ).count()

@@ -54,7 +54,7 @@ services:
       context: ./backend
       args:
         - DEV=true
-    command: celery -A app worker -l info
+    command: celery -A app worker -B -l info
     tty: true
     restart: unless-stopped
     working_dir: /app
