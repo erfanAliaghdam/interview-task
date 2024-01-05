@@ -19,6 +19,7 @@ class CartItemModelTest(TestCase):
         obj = CartItem()
         self.assertTrue(hasattr(obj, "id"))
         self.assertTrue(hasattr(obj, "cart_id"))
+        self.assertTrue(hasattr(obj, "product_id"))
         self.assertTrue(hasattr(obj, "quantity"))
 
     def test_create_cart_item_successfully(self):

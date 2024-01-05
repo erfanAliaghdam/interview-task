@@ -16,18 +16,30 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ["date_joined"]
     list_filter = ["is_active", "date_joined"]
     fieldsets = (
+        (None, {"fields": ("email", )}),
         (
-            None,
+            "user_detail",
             {
                 "fields": (
-                    "email",
                     "user_identifier",
                     "first_name",
                     "last_name",
-                    "is_active",
-                ),
+                )
             },
         ),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
+        ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
     search_fields = ["email", "first_name", "last_name", "user_identifier"]
     search_help_text = "search by : email, first name, last name, user identifier"

@@ -12,17 +12,20 @@ class AdminUserAdmin(UserAdmin):
     )
     ordering = ["date_joined"]
     list_filter = ["is_active", "date_joined"]
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("email", "first_name", "last_name", "password1", "password2"),
+            },
+        ),
+    )
     fieldsets = (
         (
             None,
             {
-                "fields": (
-                    "email",
-                    "user_identifier",
-                    "first_name",
-                    "last_name",
-                    "is_active",
-                ),
+                "fields": ("email", "user_identifier",  "first_name", "last_name", "is_active"),
             },
         ),
     )

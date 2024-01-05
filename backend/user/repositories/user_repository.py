@@ -10,9 +10,9 @@ class UserRepository:
         return self.user_model.objects.filter(email=email)
 
     def check_if_client_user_exists(self, email: str):
-        if self.filter_user_by_email(email).exists():
-            return True
-        return False
+        if not self.filter_user_by_email(email).exists():
+            return False
+        return True
 
     def register_client_user(
         self, first_name: str, last_name: str, email: str, password: str

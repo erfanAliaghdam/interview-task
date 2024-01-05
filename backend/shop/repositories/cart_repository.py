@@ -33,3 +33,6 @@ class CartRepository:
         )
 
         return cart
+
+    def get_cart_items_by_user_id(self, user_id: int):
+        return CartItem.objects.filter(cart__user_id=user_id)

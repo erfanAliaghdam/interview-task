@@ -21,7 +21,6 @@ services:
       context: ./backend
       args:
         - DEV=true
-    image: project-app:latest
     tty: true
     ports:
       - "8000:8000"
@@ -38,8 +37,40 @@ services:
     networks:
       - project-net
 
+  project-redis:
+    image: redis:6.2-alpine
+    container_name: project-redis
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - redisdata:/data
+    networks:
+      - project-net
+
+  project-celery:
+    container_name: project-celery
+    build:
+      context: ./backend
+      args:
+        - DEV=true
+    command: celery -A app worker -l info
+    tty: true
+    restart: unless-stopped
+    working_dir: /app
+    env_file: './backend/.env.local'
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - backend
+      - db
+      - project-redis
+    networks:
+      - project-net
+
 volumes:
   project-pgsql-data:
+  redisdata:
 
 networks:
   project-net:

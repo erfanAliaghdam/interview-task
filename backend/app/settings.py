@@ -122,9 +122,14 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 5,
 }
 
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND")
+
 # user unique identifier prefix
 USER_IDENTIFIER_PREFIX = os.environ.get("USER_IDENTIFIER_PREFIX", "user")
 
 AUTH_USER_MODEL = "user.User"
 
 GROUP_LIST = ["Client"]
+
+
