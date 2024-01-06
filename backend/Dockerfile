@@ -34,13 +34,6 @@ RUN rm -rf /tmp
 
 COPY . .
 
-RUN mkdir -p /vol/static/media && \
-    cp -r /media /vol/static/media && \
-    mkdir -p /vol/web/static && \
-    cp -r /media /vol/web/media && \
-    chown -R django-user:django-user /vol/ && \
-    chmod -R 755 /vol/web
-
 RUN chmod -R +x /scripts
 
 RUN chown -R django-user:django-user /scripts
