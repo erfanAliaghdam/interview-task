@@ -11,7 +11,7 @@ cart_repository = CartRepository()
 class UserCartSerializerTest(TestCase):
     def setUp(self):
         self.user = baker.make(get_user_model())
-        self.cart = baker.make(Cart, user=self.user)
+        self.cart = Cart.objects.filter(user_id=self.user.id).first()
         self.cart_items = baker.make(CartItem, cart=self.cart, _quantity=2)
         self.cart_items[0].product.stock = 0
         self.cart_items[1].product.stock = 1

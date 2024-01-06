@@ -9,11 +9,11 @@ class CartRepositoryTest(TestCase):
     def setUp(self) -> None:
         title = "test"
         self.user = baker.make(get_user_model())
-        self.product = baker.make(Product, title=title, price=250)
+        self.product = baker.make(Product, title=title, price=250, stock=3)
         self.repository = CartRepository()
-        self.cart = baker.make(Cart, user=self.user)
+        self.cart = Cart.objects.filter(user_id=self.user.id).first()
         self.in_stock_cart_item = baker.make(
-            CartItem, product=self.product, cart=self.cart
+            CartItem, product=self.product, cart=self.cart, quantity=2
         )
         self.out_of_stock_product = baker.make(Product, stock=0)
         self.out_of_stock_cart_item = baker.make(
@@ -21,27 +21,25 @@ class CartRepositoryTest(TestCase):
         )
 
     def test_add_product_to_cart_by_user_id_and_product_id(self):
-        Cart.objects.all().delete()
-        self.assertFalse(Cart.objects.filter(user=self.user).exists())
         result = self.repository.add_product_to_cart_by_user_id_and_product_id(
-            product_id=self.product.id, user_id=self.user.id
-        )
-        self.assertTrue(Cart.objects.filter(user=self.user).exists())
-        self.assertEqual(
-            Cart.objects.filter(user=self.user).first().items.all().count(), 1
-        )
-        self.assertEqual(result.user.id, self.user.id)
-        self.repository.add_product_to_cart_by_user_id_and_product_id(
-            product_id=self.product.id, user_id=self.user.id
-        )
-        # check if new cart item not created
-        self.assertEqual(
-            Cart.objects.filter(user=self.user).first().items.all().count(), 1
+            product_id=self.in_stock_cart_item.product.id, cart_id=self.cart.id
         )
         # check if quantity raises
+        self.assertTrue(result)
         self.assertEqual(
-            Cart.objects.filter(user=self.user).first().items.all().first().quantity, 2
+            CartItem.objects.filter(
+                cart__user=self.user, product_id=self.in_stock_cart_item.product.id
+            )
+            .first()
+            .quantity,
+            self.in_stock_cart_item.quantity + 1,
         )
+
+        result = self.repository.add_product_to_cart_by_user_id_and_product_id(
+            product_id=self.in_stock_cart_item.product.id, cart_id=self.cart.id
+        )
+        # check if quantity raises
+        self.assertFalse(result)
 
     def test_get_cart_with_all_data_and_total_price_by_user_id(self):
         result = self.repository.get_cart_with_all_data_and_total_price_by_user_id(
@@ -78,10 +76,10 @@ class CartRepositoryTest(TestCase):
         in_stock_products = baker.make(Product, stock=2, _quantity=2)
         out_of_stock_products = baker.make(Product, stock=0, _quantity=2)
         for product in in_stock_products:
-            baker.make(CartItem, quantity=1, product=product)
+            baker.make(CartItem, cart=self.cart, quantity=1, product=product)
 
         for product in out_of_stock_products:
-            baker.make(CartItem, quantity=5, product=product)
+            baker.make(CartItem, cart=self.cart, quantity=5, product=product)
 
         result = self.repository.validate_cart_item_quantity_by_queryset(
             cart_items=CartItem.objects.all()

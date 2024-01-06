@@ -10,7 +10,7 @@ class ProductAddToCartViewTest(BaseAPITestClass):
         self.product = baker.make(Product, stock=10)
         self.url = reverse("cart-add", kwargs={"slug": self.product.slug})
         self.authenticate_user(self.user)
-        self.cart = baker.make(Cart, user=self.user)
+        self.cart = Cart.objects.filter(user_id=self.user.id).first()
         self.cart_items = baker.make(CartItem, cart=self.cart, _quantity=4)
 
     def test_if_unauthorized_user_cannot_access_returns_401(self):

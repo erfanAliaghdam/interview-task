@@ -43,4 +43,3 @@ def generate_development_seed():
     ProductFactory.create_batch(5, stock=0)
     ProductFactory.create_batch(20)
     print(str(Product.objects.all().count()), "products created. ")
-

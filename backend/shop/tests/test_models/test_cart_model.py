@@ -7,7 +7,8 @@ from shop.models import Cart
 
 class CartModelTest(TestCase):
     def setUp(self) -> None:
-        self.cart = baker.make(Cart)
+        self.user = baker.make(get_user_model())
+        self.cart = Cart.objects.filter(user=self.user)
 
     def test_model_is_inherited_from_Model(self):
         self.assertTrue(issubclass(Cart, models.Model))
@@ -19,5 +20,6 @@ class CartModelTest(TestCase):
 
     def test_create_cart_successfully(self):
         user = baker.make(get_user_model())
+        Cart.objects.all().delete()
         cart = Cart.objects.create(user=user)
         self.assertEqual(cart.user.id, user.id)

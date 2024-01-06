@@ -12,7 +12,7 @@ class CartServiceTest(TestCase):
         self.user = baker.make(get_user_model())
         self.order = baker.make(Order, user=self.user)
         self.order_items = baker.make(OrderItem, order=self.order)
-        self.cart = baker.make(Cart, user=self.user)
+        self.cart = Cart.objects.filter(user_id=self.user.id).first()
         self.cart_items = baker.make(CartItem, cart=self.cart, _quantity=2)
         self.out_of_stock_product = baker.make(Product, stock=0)
         self.in_stock_product = baker.make(Product, stock=1)

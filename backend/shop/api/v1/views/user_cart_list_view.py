@@ -6,14 +6,10 @@ from rest_framework.decorators import (
     authentication_classes,
 )
 from rest_framework.response import Response
-
 from shop.api.v1.serializers import UserCartSerializer
-from shop.repositories import ProductRepository, CartRepository
-from shop.services import CartService
+from shop.repositories import CartRepository
 from core.permissions import IsAuthenticatedPermission
 
-product_repository = ProductRepository()
-cart_service = CartService()
 cart_repository = CartRepository()
 
 

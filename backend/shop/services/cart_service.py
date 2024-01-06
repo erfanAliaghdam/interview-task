@@ -10,7 +10,14 @@ class CartService:
     def add_product_to_cart_by_product_id_and_user_id(
         self, user_id: int, product_id: int
     ):
-        cart = self.cart_repository.add_product_to_cart_by_user_id_and_product_id(
-            product_id=product_id, user_id=user_id
+        cart, _ = self.cart_repository.create_get_or_create_cart_for_user_by_user_id(
+            user_id=user_id
         )
-        return cart
+        product_added = (
+            self.cart_repository.add_product_to_cart_by_user_id_and_product_id(
+                product_id=product_id, cart_id=cart.id
+            )
+        )
+        if not product_added:
+            return False
+        return True

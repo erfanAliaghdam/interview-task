@@ -5,17 +5,21 @@ from shop.models import Cart, CartItem
 
 
 class CartRepository:
+    def create_get_or_create_cart_for_user_by_user_id(self, user_id: int):
+        return Cart.objects.get_or_create(user_id=user_id)
+
     def add_product_to_cart_by_user_id_and_product_id(
-        self, user_id: int, product_id: int
+        self, product_id: int, cart_id: int
     ):
-        cart, _ = Cart.objects.get_or_create(user_id=user_id)
         cart_item, created = CartItem.objects.get_or_create(
-            cart=cart, product_id=product_id
+            cart_id=cart_id, product_id=product_id
         )
         if not created:
+            if not cart_item.quantity < cart_item.product.stock:
+                return False
             cart_item.quantity += 1
             cart_item.save()
-        return cart
+        return True
 
     def get_cart_with_all_data_and_total_price_by_user_id(self, user_id: int):
         cart = (

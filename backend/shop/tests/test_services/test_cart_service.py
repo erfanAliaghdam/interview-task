@@ -10,7 +10,7 @@ from shop.services import CartService
 class CartServiceTest(TestCase):
     def setUp(self) -> None:
         self.user = baker.make(get_user_model())
-        self.cart = baker.make(Cart, user=self.user)
+        self.cart = Cart.objects.filter(user_id=self.user.id).first()
         self.product = baker.make(Product)
         self.service = CartService()
 
@@ -19,8 +19,8 @@ class CartServiceTest(TestCase):
         "add_product_to_cart_by_user_id_and_product_id"
     )
     def test_add_product_to_cart_by_product_id_and_user_id(self, cart_mock):
-        cart_mock.return_value = self.cart
+        cart_mock.return_value = True
         result = self.service.add_product_to_cart_by_product_id_and_user_id(
             product_id=self.product.id, user_id=self.user.id
         )
-        self.assertEqual(result, self.cart)
+        self.assertEqual(result, cart_mock.return_value)

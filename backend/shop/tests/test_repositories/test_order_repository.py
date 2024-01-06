@@ -29,7 +29,7 @@ class OrderRepositoryTest(TestCase):
             OrderItem.objects.filter(order__user_id=self.user.id).count(), 0
         )
 
-        cart = baker.make(Cart, user=self.user)
+        cart = Cart.objects.filter(user_id=self.user.id).first()
         cart_items = baker.make(CartItem, cart=cart, _quantity=3)
 
         get_cart_items_by_user_id_mock.return_value = CartItem.objects.filter(
@@ -59,3 +59,16 @@ class OrderRepositoryTest(TestCase):
             start=start, finish=finish
         )
         self.assertEqual(orders_count, 3)
+
+    def test_get_order_with_all_data_and_total_price_by_user_id(self):
+        orders = Order.objects.filter(user=self.user).prefetch_related("items")
+        orders_count = orders.count()
+        order_total_price = sum(
+            item.price * item.quantity for item in orders.first().items.all()
+        )
+        result = self.repository.get_order_with_all_data_and_total_price_by_user_id(
+            user_id=self.user.id
+        )
+        self.assertEqual(orders_count, result.count())
+        self.assertEqual(orders.first().items.all().count(), result[0].items_count)
+        self.assertEqual(order_total_price, result[0].total_price)

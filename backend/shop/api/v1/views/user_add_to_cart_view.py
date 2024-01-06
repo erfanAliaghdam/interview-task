@@ -32,9 +32,14 @@ def user_add_to_cart_view(request, slug: str):
             status=status.HTTP_412_PRECONDITION_FAILED,
         )
 
-    cart_service.add_product_to_cart_by_product_id_and_user_id(
+    added_to_cart = cart_service.add_product_to_cart_by_product_id_and_user_id(
         user_id=request.user.id, product_id=product.id
     )
+    if not added_to_cart:
+        return Response(
+            {"status": "failed", "message": "product is out of stock."},
+            status=status.HTTP_412_PRECONDITION_FAILED,
+        )
 
     return Response(
         {

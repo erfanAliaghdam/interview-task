@@ -9,7 +9,7 @@ class CartItemModelTest(TestCase):
     def setUp(self) -> None:
         self.user = baker.make(get_user_model())
         self.product = baker.make(Product)
-        self.cart = baker.make(Cart)
+        self.cart = Cart.objects.filter(user=self.user).first()
         self.cart_item = baker.make(CartItem, cart=self.cart)
 
     def test_model_is_inherited_from_Model(self):

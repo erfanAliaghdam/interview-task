@@ -1,6 +1,5 @@
 from django.db import models
-from django.db.models import Sum, Prefetch, ExpressionWrapper, F, Count
-
+from django.db.models import Sum, Case, When, F, Value, Count
 from shop.models import Order, OrderItem
 from shop.repositories import CartRepository
 
@@ -29,3 +28,18 @@ class OrderRepository:
         return Order.objects.filter(
             status=Order.CHECKED, created_at__range=(start, finish)
         ).count()
+
+    def get_order_with_all_data_and_total_price_by_user_id(self, user_id: int):
+        orders = (
+            Order.objects.filter(user_id=user_id)
+            .prefetch_related("items__product")
+            .annotate(
+                items_count=Count("items"),
+                total_price=Sum(
+                    F("items__quantity") * F("items__price"),
+                    default=0,
+                    output_field=models.DecimalField(max_digits=12, decimal_places=2),
+                ),
+            )
+        )
+        return orders
