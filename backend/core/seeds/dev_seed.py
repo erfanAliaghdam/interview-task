@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
+
+from shop.models import Product
 from user.factories import UserFactory, GroupFactory
+from shop.factories import ProductFactory
 
 
 def generate_development_seed():
@@ -36,3 +39,8 @@ def generate_development_seed():
     )
 
     print(str(get_user_model().objects.all().count()), "users created. ")
+
+    ProductFactory.create_batch(5, stock=0)
+    ProductFactory.create_batch(20)
+    print(str(Product.objects.all().count()), "products created. ")
+

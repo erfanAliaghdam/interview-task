@@ -3,6 +3,9 @@
 
 > find . -path "*/migrations/*.pyc"  -delete
 
+## run project by docker-compose
+> docker-compose up --build -d
+
 ## generate dev seeds
 step 1 :
 > docker-compose run backend sh

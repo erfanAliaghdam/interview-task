@@ -1,0 +1,55 @@
+
+>Q1 : Write a query to retrieve the names and prices of products with stock quantities greater than 0
+~~~ 
+SELECT price, title
+FROM shop_product
+WHERE stock > 0
+~~~
+
+-----------
+>Q2 : Write a query to list customers who have placed orders, along with the total number of orders each customer has placed.
+~~~
+SELECT
+    user_user.id as user_id,
+    user_user.email as email,
+    COUNT(shop_order.id) as order_count
+FROM
+    user_user
+LEFT JOIN
+    shop_order ON user_user.id = shop_order.user_id
+GROUP BY
+    user_user.id, user_user.email;
+~~~
+
+
+-----------
+
+> Q3: Write a query to calculate the total value of each order, considering the quantity and price of each product in the order.
+~~~
+SELECT
+    orderitem.id,
+    SUM(orderitem.quantity * orderitem.price) AS total_value
+FROM
+    shop_orderitem orderitem
+GROUP BY
+    orderitem.order_id, orderitem.id;
+~~~
+
+-----------
+> Q4: Write a query to identify products with a stock quantity of 0.
+~~~
+SELECT 
+    *
+FROM shop_product as product
+WHERE product.stock = 0;
+   
+~~~
+
+-----------
+> Q5: Given a customer's name, write a query to find their email address or mobile ( if you use mobile or email for customers).
+
+~~~
+SELECT email
+FROM user_user
+WHERE first_name LIKE 'John' AND last_name LIKE 'Doe';
+~~~

@@ -69,6 +69,4 @@ class RegisterClientUserViewTest(BaseAPITestClass):
             password=self.valid_data["password"],
         )
         self.assertEqual(response.status_code, 500)
-        self.assertEqual(response.data["status"], "failed")
-        self.assertEqual(response.data["message"], "Please try again later.")
         logging_mock.assert_called_once()

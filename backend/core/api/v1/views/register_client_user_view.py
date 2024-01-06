@@ -1,8 +1,8 @@
 import logging
-
 from django.db import transaction
 from rest_framework import status
 from rest_framework.response import Response
+from core.exceptions import Custom500Exception
 from core.services import RegisterUserService
 from core.api.v1.serializers import RegisterClientUserSerializer
 from rest_framework.authtoken.models import Token
@@ -56,8 +56,4 @@ def register_client_user_view(request):
             return Response(response, status=status.HTTP_200_OK)
     except Exception as e:
         logging.error(e)
-        response = {
-            "status": "failed",
-            "message": "Please try again later.",
-        }
-        return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        raise Custom500Exception
