@@ -1,5 +1,5 @@
 from django.contrib import admin
-from shop.models import Product, Order, OrderItem
+from shop.models import Product, Order, OrderItem, Cart, CartItem
 
 
 @admin.register(Product)
@@ -26,6 +26,27 @@ class OrderAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return Order.objects.select_related("user").all()
+
+    def user_email(self, obj):
+        return obj.user.email
+
+    user_email.short_description = "User Email"
+
+
+class TabularCartItem(admin.TabularInline):
+    model = CartItem
+    autocomplete_fields = ["product"]
+    extra = 1
+
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ["user_email"]
+    inlines = [TabularCartItem]
+    readonly_fields = ["user"]
+
+    def get_queryset(self, request):
+        return Cart.objects.select_related("user").all()
 
     def user_email(self, obj):
         return obj.user.email
