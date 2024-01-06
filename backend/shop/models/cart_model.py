@@ -27,3 +27,4 @@ class CartItem(models.Model):
     class Meta:
         verbose_name = "Cart Item"
         verbose_name_plural = "Cart Items"
+        unique_together = ("product", "cart")

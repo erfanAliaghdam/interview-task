@@ -11,12 +11,7 @@ class OrderRepository:
     def create_order(self, user_id: int):
         return Order.objects.create(user_id=user_id)
 
-    def create_order_items_based_on_cart_items(
-            self,
-            user_id: int,
-            order_id: int
-    ):
-        cart_items = cart_repository.get_cart_items_by_user_id(user_id=user_id)
+    def create_order_items_based_on_cart_items_query(self, order_id: int, cart_items):
         order_items = []
         for cart_item in cart_items:
             order_items.append(
@@ -24,7 +19,7 @@ class OrderRepository:
                     order_id=order_id,
                     product=cart_item.product,
                     quantity=cart_item.quantity,
-                    price=cart_item.product.price
+                    price=cart_item.product.price,
                 )
             )
         order_items = OrderItem.objects.bulk_create(order_items)
@@ -32,6 +27,5 @@ class OrderRepository:
 
     def get_checked_order_count_by_created_at_range(self, start, finish):
         return Order.objects.filter(
-            status=Order.CHECKED,
-            created_at__range=(start, finish)
+            status=Order.CHECKED, created_at__range=(start, finish)
         ).count()

@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Sum, Prefetch, ExpressionWrapper, F, Count
+from django.db.models import Sum, F, Count, Case, When, Value
 
 from shop.models import Cart, CartItem
 
@@ -23,11 +23,25 @@ class CartRepository:
             .prefetch_related("items__product")
             .annotate(
                 total_price=Sum(
-                    F("items__quantity") * F("items__product__price"),
+                    Case(
+                        When(
+                            items__product__stock__gt=0,
+                            then=F("items__quantity") * F("items__product__price"),
+                        ),
+                        default=Value(0),
+                        output_field=models.DecimalField(),
+                    ),
                     default=0,
                     output_field=models.DecimalField(),
                 ),
                 items_count=Count("items"),
+                in_stock_items_count=Sum(
+                    Case(
+                        When(items__product__stock__gt=0, then=1),
+                        default=Value(0),
+                        output_field=models.IntegerField(),
+                    )
+                ),
             )
             .first()
         )
@@ -35,4 +49,29 @@ class CartRepository:
         return cart
 
     def get_cart_items_by_user_id(self, user_id: int):
-        return CartItem.objects.filter(cart__user_id=user_id)
+        return CartItem.objects.select_related("product").filter(cart__user_id=user_id)
+
+    def get_in_stock_cart_items_by_cart_id(self, cart_id: int):
+        cart_items = CartItem.objects.select_related("product").filter(
+            cart_id=cart_id, product__stock__gt=0
+        )
+        return cart_items
+
+    def get_out_of_stock_cart_items_by_cart_id(self, cart_id: int):
+        cart_items = CartItem.objects.select_related("product").filter(
+            cart_id=cart_id, product__stock=0
+        )
+        return cart_items
+
+    def validate_cart_item_quantity_by_queryset(self, cart_items):
+        for cart_item in cart_items:
+            if cart_item.quantity > cart_item.product.stock:
+                return False
+        return True
+
+    def update_cart_items_products_stock_by_queryset(self, cart_items):
+        for cart_item in cart_items:
+            cart_item.product.stock -= cart_item.quantity
+            cart_item.product.save()
+
+        return cart_items

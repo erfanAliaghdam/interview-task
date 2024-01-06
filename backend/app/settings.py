@@ -125,17 +125,17 @@ REST_FRAMEWORK = {
 
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND")
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
 
 # Celery Beat configuration
-CELERY_IMPORTS = ['shop.celery_tasks.beat_tasks.check_orders_task']
+CELERY_IMPORTS = ["shop.celery_tasks.beat_tasks.check_orders_task"]
 CELERY_BEAT_SCHEDULE = {
-    'checked_orders': {
-        'task': 'shop.celery_tasks.beat_tasks.check_orders_task.checked_orders',
-        'schedule': crontab(hour=20, minute=0)
+    "checked_orders": {
+        "task": "shop.celery_tasks.beat_tasks.check_orders_task.checked_orders",
+        "schedule": crontab(hour=20, minute=0),
     },
 }
 # user unique identifier prefix
@@ -147,6 +147,6 @@ GROUP_LIST = ["Client"]
 
 FROM_EMAIL = os.environ.get("FROM_EMAIL", "example@example.com")
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 SUPERUSER_EMAIL = os.environ.get("SUPERUSER_EMAIL", "superuser@example.com")

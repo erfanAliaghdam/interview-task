@@ -1,3 +1,5 @@
+from typing import List
+
 from shop.models import Product
 
 
@@ -14,3 +16,6 @@ class ProductRepository:
 
     def get_product_by_slug(self, slug: str):
         return Product.objects.filter(slug=slug).first()
+
+    def get_products_by_id_list(self, product_ids=List[int]):
+        return Product.objects.filter(id__in=product_ids)

@@ -28,10 +28,7 @@ class OrderItemModelTest(TestCase):
     def test_create_order_item_successfully(self):
         new_product = baker.make(Product)
         order_item = OrderItem.objects.create(
-            order=self.order,
-            product=new_product,
-            quantity=2,
-            price=new_product.price
+            order=self.order, product=new_product, quantity=2, price=new_product.price
         )
         self.assertEqual(order_item.order.id, self.order.id)
         self.assertEqual(order_item.product.id, new_product.id)

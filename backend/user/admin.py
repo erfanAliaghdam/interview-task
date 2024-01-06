@@ -16,7 +16,7 @@ class UserAdmin(admin.ModelAdmin):
     ordering = ["date_joined"]
     list_filter = ["is_active", "date_joined"]
     fieldsets = (
-        (None, {"fields": ("email", )}),
+        (None, {"fields": ("email",)}),
         (
             "user_detail",
             {

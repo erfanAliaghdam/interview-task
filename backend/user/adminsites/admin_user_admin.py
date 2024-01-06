@@ -17,7 +17,13 @@ class AdminUserAdmin(UserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "first_name", "last_name", "password1", "password2"),
+                "fields": (
+                    "email",
+                    "first_name",
+                    "last_name",
+                    "password1",
+                    "password2",
+                ),
             },
         ),
     )
@@ -25,7 +31,13 @@ class AdminUserAdmin(UserAdmin):
         (
             None,
             {
-                "fields": ("email", "user_identifier",  "first_name", "last_name", "is_active"),
+                "fields": (
+                    "email",
+                    "user_identifier",
+                    "first_name",
+                    "last_name",
+                    "is_active",
+                ),
             },
         ),
     )

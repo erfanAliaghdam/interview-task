@@ -11,7 +11,13 @@ class ClientUserAdmin(UserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "first_name", "last_name", "password1", "password2"),
+                "fields": (
+                    "email",
+                    "first_name",
+                    "last_name",
+                    "password1",
+                    "password2",
+                ),
             },
         ),
     )
@@ -19,7 +25,13 @@ class ClientUserAdmin(UserAdmin):
         (
             None,
             {
-                "fields": ("email", "user_identifier",  "first_name", "last_name", "is_active"),
+                "fields": (
+                    "email",
+                    "user_identifier",
+                    "first_name",
+                    "last_name",
+                    "is_active",
+                ),
             },
         ),
     )
@@ -35,7 +47,7 @@ class ClientUserAdmin(UserAdmin):
         # Check if the user is being created (not modified)
         if not change:
             # Get or create the "Client" group
-            client_group, created = Group.objects.get_or_create(name='Client')
+            client_group, created = Group.objects.get_or_create(name="Client")
 
             # Add the user to the "Client" group
             obj.groups.add(client_group)

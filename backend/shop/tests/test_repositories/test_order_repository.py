@@ -19,18 +19,24 @@ class OrderRepositoryTest(TestCase):
         self.assertEqual(order.user.id, self.user.id)
         self.assertEqual(Order.objects.filter(user_id=self.user.id).count(), 2)
 
-    @patch("shop.repositories.order_repository.CartRepository.get_cart_items_by_user_id")
-    def test_create_order_items_based_on_cart_items(self, get_cart_items_by_user_id_mock):
-        self.assertEqual(OrderItem.objects.filter(order__user_id=self.user.id).count(), 0)
+    @patch(
+        "shop.repositories.order_repository.CartRepository.get_cart_items_by_user_id"
+    )
+    def test_create_order_items_based_on_cart_items(
+        self, get_cart_items_by_user_id_mock
+    ):
+        self.assertEqual(
+            OrderItem.objects.filter(order__user_id=self.user.id).count(), 0
+        )
 
         cart = baker.make(Cart, user=self.user)
-        baker.make(CartItem, cart=cart, _quantity=3)
+        cart_items = baker.make(CartItem, cart=cart, _quantity=3)
 
         get_cart_items_by_user_id_mock.return_value = CartItem.objects.filter(
-            cart__user_id=self.user.id)
-        result = self.repository.create_order_items_based_on_cart_items(
-            user_id=self.user.id,
-            order_id=self.order.id
+            cart__user_id=self.user.id
+        )
+        result = self.repository.create_order_items_based_on_cart_items_query(
+            order_id=self.order.id, cart_items=cart_items
         )
         user_order_items = OrderItem.objects.filter(order__user_id=self.user.id)
         self.assertEqual(user_order_items.count(), 3)
@@ -45,15 +51,11 @@ class OrderRepositoryTest(TestCase):
         start = datetime.now() - timedelta(days=1)
         finish = datetime.now()
         orders_count = self.repository.get_checked_order_count_by_created_at_range(
-            start=start,
-            finish=finish
+            start=start, finish=finish
         )
         self.assertEqual(orders_count, 2)
         start = datetime.now() - timedelta(days=3)
         orders_count = self.repository.get_checked_order_count_by_created_at_range(
-            start=start,
-            finish=finish
+            start=start, finish=finish
         )
         self.assertEqual(orders_count, 3)
-
-

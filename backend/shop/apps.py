@@ -7,4 +7,3 @@ class ShopConfig(AppConfig):
 
     def ready(self):
         import shop.signals.handlers
-

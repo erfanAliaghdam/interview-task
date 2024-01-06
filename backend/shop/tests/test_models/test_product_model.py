@@ -1,9 +1,7 @@
 from _decimal import Decimal
-
 from django.db import models
 from django.test import TestCase
 from model_bakery import baker
-
 from shop.models import Product
 
 
@@ -22,13 +20,14 @@ class ProductModelTest(TestCase):
         self.assertTrue(hasattr(obj, "price"))
         self.assertTrue(hasattr(obj, "slug"))
         self.assertTrue(hasattr(obj, "created_at"))
+        self.assertTrue(hasattr(obj, "stock"))
 
     def test_create_product_successfully(self):
         title = "test-xx"
         description = "test"
         price = Decimal(2500.245)
         product = Product.objects.create(
-            title=title, description=description, price=price
+            title=title, description=description, price=price, stock=1
         )
         self.assertEqual(product.title, title)
         self.assertEqual(product.description, description)

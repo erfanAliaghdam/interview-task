@@ -19,8 +19,7 @@ def checked_orders():
     # Set the time to 8 PM
     yesterday_8pm = datetime(yesterday.year, yesterday.month, yesterday.day, 20, 0, 0)
     orders_count = order_repository.get_checked_order_count_by_created_at_range(
-        start=yesterday_8pm,
-        finish=now
+        start=yesterday_8pm, finish=now
     )
 
     send_mail(
@@ -32,5 +31,5 @@ def checked_orders():
         """,
         from_email=from_email,
         recipient_list=[superuser_email],
-        fail_silently=True
+        fail_silently=True,
     )

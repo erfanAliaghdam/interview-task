@@ -13,7 +13,7 @@ class ProductDetailSerializerTest(TestCase):
         data = serializer.data
         self.assertEqual(
             set(data.keys()),
-            {"id", "title", "description", "slug", "created_at", "price"},
+            {"id", "title", "description", "slug", "created_at", "price", "stock"},
         )
 
     def test_product_list_serializer(self):
@@ -25,6 +25,7 @@ class ProductDetailSerializerTest(TestCase):
                 "created_at": self.product.created_at.strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
                 "slug": self.product.slug,
                 "price": self.product.price,
+                "stock": self.product.stock,
             }
         ]
 
@@ -42,3 +43,4 @@ class ProductDetailSerializerTest(TestCase):
         self.assertEqual(
             serializer.data.get("created_at"), expected_data[0].get("created_at")
         )
+        self.assertEqual(serializer.data.get("stock"), expected_data[0].get("stock"))

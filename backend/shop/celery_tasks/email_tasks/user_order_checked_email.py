@@ -6,7 +6,9 @@ from_email = settings.FROM_EMAIL
 
 
 @shared_task(max_retries=5, retry_backoff=True)
-def user_order_checked_email(email: str, first_name: str, last_name: str, order_id: int):
+def user_order_checked_email(
+    email: str, first_name: str, last_name: str, order_id: int
+):
     send_mail(
         subject="order approved",
         message=f"""
@@ -16,5 +18,5 @@ def user_order_checked_email(email: str, first_name: str, last_name: str, order_
         """,
         from_email=from_email,
         recipient_list=[email],
-        fail_silently=True
+        fail_silently=True,
     )

@@ -13,6 +13,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=12, decimal_places=2)
     slug = models.SlugField(unique=True, max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    stock = models.PositiveIntegerField()
 
     def save(self, *args, **kwargs):
         self.slug = self.product_service.slugify_product_by_id_and_title(

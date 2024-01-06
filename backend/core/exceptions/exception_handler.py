@@ -6,6 +6,7 @@ from core.exceptions import (
     Custom403Exception,
     Custom404Exception,
     Custom500Exception,
+    Custom412Exception,
 )
 
 
@@ -16,6 +17,7 @@ def custom_exception_handler(exc, context):
         Custom403Exception,
         Custom404Exception,
         Custom500Exception,
+        Custom412Exception,
     )
 
     if isinstance(exc, custom_exceptions):

@@ -39,3 +39,11 @@ class ProductRepositoryTest(TestCase):
     def test_get_product_by_slug(self):
         product = self.repository.get_product_by_slug(slug=self.product.slug)
         self.assertEqual(product.id, self.product.id)
+
+    def test_get_products_by_id_list(self):
+        products = baker.make(Product, _quantity=3)
+        product_ids_list = [product.id for product in products]
+        result = self.repository.get_products_by_id_list(product_ids=product_ids_list)
+        self.assertEqual(result.count(), len(products))
+        for item in result:
+            self.assertIn(item.id, product_ids_list)

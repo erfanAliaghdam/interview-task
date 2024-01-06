@@ -12,10 +12,7 @@ class Order(models.Model):
 
     PENDING = 0
     CHECKED = 1
-    STATUS_CHOICES = (
-        (PENDING, "Pending"),
-        (CHECKED, "Checked")
-    )
+    STATUS_CHOICES = ((PENDING, "Pending"), (CHECKED, "Checked"))
 
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="order"
@@ -38,7 +35,7 @@ class Order(models.Model):
                     email=self.user.email,
                     first_name=self.user.first_name,
                     last_name=self.user.last_name,
-                    order_id=self.id
+                    order_id=self.id,
                 )
         super().save(*args, **kwargs)
         # on chained saves of a model object we need to update prev status

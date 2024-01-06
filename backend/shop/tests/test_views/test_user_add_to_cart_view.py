@@ -7,8 +7,8 @@ from shop.models import Cart, CartItem, Product
 class ProductAddToCartViewTest(BaseAPITestClass):
     def setUp(self) -> None:
         super().setUp()
-        product = baker.make(Product)
-        self.url = reverse("cart-add", kwargs={"slug": product.slug})
+        self.product = baker.make(Product, stock=10)
+        self.url = reverse("cart-add", kwargs={"slug": self.product.slug})
         self.authenticate_user(self.user)
         self.cart = baker.make(Cart, user=self.user)
         self.cart_items = baker.make(CartItem, cart=self.cart, _quantity=4)
@@ -27,3 +27,11 @@ class ProductAddToCartViewTest(BaseAPITestClass):
         self.assertEqual(
             result.data["message"], "product added to user cart successfully."
         )
+
+    def test_if_out_of_stock_product_returns_412(self):
+        self.product.stock = 0
+        self.product.save()
+        result = self.client.get(self.url)
+        self.assertEqual(result.status_code, 412)
+        self.assertEqual(result.data["status"], "failed")
+        self.assertEqual(result.data["message"], "product is out of stock.")

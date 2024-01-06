@@ -12,7 +12,7 @@ class ProductListSerializerTest(TestCase):
         serializer = ProductListSerializer(instance=self.products[0])
         data = serializer.data
         self.assertEqual(
-            set(data.keys()), {"id", "title", "created_at", "slug", "price"}
+            set(data.keys()), {"id", "title", "created_at", "slug", "price", "stock"}
         )
 
     def test_product_list_serializer(self):
@@ -25,6 +25,7 @@ class ProductListSerializerTest(TestCase):
                 ),
                 "slug": self.products[0].slug,
                 "price": self.products[0].price,
+                "stock": self.products[0].stock,
             },
             {
                 "id": self.products[1].id,
@@ -34,6 +35,7 @@ class ProductListSerializerTest(TestCase):
                 ),
                 "slug": self.products[1].slug,
                 "price": self.products[1].price,
+                "stock": self.products[1].stock,
             },
         ]
 
@@ -46,3 +48,4 @@ class ProductListSerializerTest(TestCase):
             )
             self.assertEqual(item.get("slug"), expected_data[idx].get("slug"))
             self.assertEqual(item.get("price"), str(expected_data[idx].get("price")))
+            self.assertEqual(item.get("stock"), expected_data[idx].get("stock"))

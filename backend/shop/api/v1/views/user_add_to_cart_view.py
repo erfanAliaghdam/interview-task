@@ -26,6 +26,11 @@ def user_add_to_cart_view(request, slug: str):
             {"status": "failed", "message": "product not found."},
             status=status.HTTP_404_NOT_FOUND,
         )
+    if product.stock == 0:
+        return Response(
+            {"status": "failed", "message": "product is out of stock."},
+            status=status.HTTP_412_PRECONDITION_FAILED,
+        )
 
     cart_service.add_product_to_cart_by_product_id_and_user_id(
         user_id=request.user.id, product_id=product.id
