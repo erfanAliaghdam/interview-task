@@ -1,6 +1,6 @@
+from unittest.mock import patch
 from django.test import TestCase
 from model_bakery import baker
-
 from shop.models import Product
 from shop.repositories import ProductRepository
 
@@ -47,3 +47,56 @@ class ProductRepositoryTest(TestCase):
         self.assertEqual(result.count(), len(products))
         for item in result:
             self.assertIn(item.id, product_ids_list)
+
+    def test__filter_by_search_term(self):
+        search_key = "big blue ball"
+        baker.make(Product, title=search_key)
+        products = Product.objects.filter(title=search_key)
+        result = self.repository._filter_by_search_term(
+            queryset=products, search_term=search_key
+        )
+        self.assertEqual(result.count(), 1)
+        self.assertEqual(result.first().id, products.first().id)
+
+    def test__filter_by_in_stock(self):
+        product = baker.make(Product, stock=5)
+        products = Product.objects.filter(id=product.id)
+        result = self.repository._filter_by_in_stock(queryset=products, in_stock=True)
+        self.assertEqual(result.count(), 1)
+        self.assertEqual(result.first().id, products.first().id)
+        product = baker.make(Product, stock=0)
+        products = Product.objects.filter(id=product.id)
+        result = self.repository._filter_by_in_stock(queryset=products, in_stock=False)
+        self.assertEqual(result.count(), 1)
+        self.assertEqual(result.first().id, products.first().id)
+
+    @patch(
+        "shop.repositories.product_repository.ProductRepository._filter_by_search_term"
+    )
+    @patch("shop.repositories.product_repository.ProductRepository._filter_by_in_stock")
+    @patch("shop.repositories.product_repository.ProductRepository.get_all_products")
+    def test_get_all_products_by_filters(
+        self, get_all_products_mock, filter_by_in_stock_mock, filter_by_search_term_mock
+    ):
+        Product.objects.all().delete()
+        products = baker.make(Product, stock=3, title="search")
+        products = Product.objects.all()
+        get_all_products_mock.return_value = products
+        filter_by_in_stock_mock.return_value = products
+        filter_by_search_term_mock.return_value = products
+        self.repository.get_all_products_by_filters()
+        self.assertEqual(get_all_products_mock.call_count, 1)
+        self.assertEqual(filter_by_in_stock_mock.call_count, 0)
+        self.assertEqual(filter_by_search_term_mock.call_count, 0)
+        self.repository.get_all_products_by_filters(search_term="xx")
+        self.assertEqual(get_all_products_mock.call_count, 1)
+        self.assertEqual(filter_by_in_stock_mock.call_count, 0)
+        self.assertEqual(filter_by_search_term_mock.call_count, 1)
+        self.repository.get_all_products_by_filters(in_stock=True)
+        self.assertEqual(get_all_products_mock.call_count, 1)
+        self.assertEqual(filter_by_in_stock_mock.call_count, 1)
+        self.assertEqual(filter_by_search_term_mock.call_count, 0)
+        self.repository.get_all_products_by_filters(in_stock=True, search_term="xx")
+        self.assertEqual(get_all_products_mock.call_count, 1)
+        self.assertEqual(filter_by_in_stock_mock.call_count, 1)
+        self.assertEqual(filter_by_search_term_mock.call_count, 1)

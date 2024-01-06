@@ -19,8 +19,16 @@ product_repository = ProductRepository()
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticatedPermission])
 def product_list_view(request):
+    """
+    filter keys :
+        - search: filters by title (not case-sensitive)
+        - in-stock: filters in-stock products(true for in-stock products)
+    """
     paginator = PageNumberPagination()
-    products = product_repository.get_all_products().order_by("-created_at")
+    products = product_repository.get_all_products_by_filters(
+        search_term=request.GET.get("search", None),
+        in_stock=request.GET.get("in-stock", None),
+    )
     result_page = paginator.paginate_queryset(products, request)
 
     serializer = ProductListSerializer(result_page, many=True)
