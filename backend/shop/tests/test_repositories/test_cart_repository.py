@@ -90,3 +90,34 @@ class CartRepositoryTest(TestCase):
             cart_items=CartItem.objects.all()
         )
         self.assertTrue(result)
+
+    def test_decrease_product_quantity_from_cart_by_user_id_and_product_id(self):
+        # successfully decrease
+        quantity = self.in_stock_cart_item.quantity
+        result = self.repository.decrease_product_quantity_from_cart_by_user_id_and_product_id(
+            user_id=self.user, product_id=self.in_stock_cart_item.product.id
+        )
+        self.assertTrue(result)
+        self.in_stock_cart_item.refresh_from_db()
+        self.assertEqual(self.in_stock_cart_item.quantity, quantity - 1)
+        # cart item quantity = 0
+        self.in_stock_cart_item.quantity = 0
+        self.in_stock_cart_item.save()
+        result = self.repository.decrease_product_quantity_from_cart_by_user_id_and_product_id(
+            user_id=self.user, product_id=self.in_stock_cart_item.product.id
+        )
+        self.assertTrue(result)
+        # cart item quantity = 1
+        self.in_stock_cart_item.quantity = 1
+        self.in_stock_cart_item.save()
+        result = self.repository.decrease_product_quantity_from_cart_by_user_id_and_product_id(
+            user_id=self.user, product_id=self.in_stock_cart_item.product.id
+        )
+        self.assertTrue(result)
+        self.assertFalse(
+            CartItem.objects.filter(id=self.in_stock_cart_item.id).exists()
+        )
+        result = self.repository.decrease_product_quantity_from_cart_by_user_id_and_product_id(
+            user_id=self.user, product_id=self.in_stock_cart_item.product.id
+        )
+        self.assertFalse(result)

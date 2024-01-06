@@ -24,3 +24,25 @@ class CartServiceTest(TestCase):
             product_id=self.product.id, user_id=self.user.id
         )
         self.assertEqual(result, cart_mock.return_value)
+
+    @patch(
+        "shop.services.cart_service.CartRepository."
+        "decrease_product_quantity_from_cart_by_user_id_and_product_id"
+    )
+    def test_decrease_product_quantity_on_cart_by_user_id_and_product_id(
+        self, decrease_quantity_mock
+    ):
+        decrease_quantity_mock.return_value = None
+        result = (
+            self.service.decrease_product_quantity_on_cart_by_user_id_and_product_id(
+                user_id=self.user.id, product_id=self.product.id
+            )
+        )
+        self.assertFalse(result)
+        decrease_quantity_mock.return_value = True
+        result = (
+            self.service.decrease_product_quantity_on_cart_by_user_id_and_product_id(
+                user_id=self.user.id, product_id=self.product.id
+            )
+        )
+        self.assertTrue(result)

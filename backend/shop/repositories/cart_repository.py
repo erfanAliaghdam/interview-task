@@ -21,6 +21,22 @@ class CartRepository:
             cart_item.save()
         return True
 
+    def decrease_product_quantity_from_cart_by_user_id_and_product_id(
+        self, product_id: int, user_id: int
+    ):
+        cart_item = CartItem.objects.filter(
+            cart__user_id=user_id, product_id=product_id
+        ).first()
+
+        if not cart_item:
+            return False
+        if cart_item.quantity == 1 or cart_item.quantity == 0:
+            cart_item.delete()
+        else:
+            cart_item.quantity -= 1
+            cart_item.save()
+        return True
+
     def get_cart_with_all_data_and_total_price_by_user_id(self, user_id: int):
         cart = (
             Cart.objects.filter(user_id=user_id)

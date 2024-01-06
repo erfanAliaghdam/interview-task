@@ -21,3 +21,13 @@ class CartService:
         if not product_added:
             return False
         return True
+
+    def decrease_product_quantity_on_cart_by_user_id_and_product_id(
+        self, user_id: int, product_id: int
+    ):
+        product_removed = self.cart_repository.decrease_product_quantity_from_cart_by_user_id_and_product_id(
+            product_id=product_id, user_id=user_id
+        )
+        if not product_removed:
+            return False
+        return True
