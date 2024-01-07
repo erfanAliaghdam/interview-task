@@ -17,7 +17,7 @@ class UserDecreaseQuantityCartViewTest(BaseAPITestClass):
 
     def test_if_unauthorized_user_cannot_access_returns_401(self):
         self.client.logout()
-        result = self.client.get(self.url)
+        result = self.client.post(self.url)
         self.assertEqual(result.status_code, 401)
         self.assertEqual(result.data["status"], "failed")
         self.assertEqual(result.data["message"], "Please login.")
@@ -35,7 +35,7 @@ class UserDecreaseQuantityCartViewTest(BaseAPITestClass):
     ):
         decrease_service_mock.return_value = True
         product_mock.return_value = self.product
-        result = self.client.get(self.url)
+        result = self.client.post(self.url)
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.data["status"], "success")
         self.assertEqual(
@@ -57,7 +57,7 @@ class UserDecreaseQuantityCartViewTest(BaseAPITestClass):
         product_mock.return_value = self.product
         self.cart_items[0].product.stock = 0
         self.cart_items[0].product.save()
-        result = self.client.get(self.url)
+        result = self.client.post(self.url)
         self.assertEqual(result.status_code, 404)
         self.assertEqual(result.data["status"], "failed")
         self.assertEqual(result.data["message"], "product not found.")
@@ -67,7 +67,7 @@ class UserDecreaseQuantityCartViewTest(BaseAPITestClass):
     )
     def test_if_not_found_product_returns_404(self, product_mock):
         product_mock.return_value = None
-        result = self.client.get(self.url)
+        result = self.client.post(self.url)
         self.assertEqual(result.status_code, 404)
         self.assertEqual(result.data["status"], "failed")
         self.assertEqual(result.data["message"], "product not found.")

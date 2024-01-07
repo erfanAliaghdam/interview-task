@@ -15,7 +15,7 @@ cart_service = CartService()
 cart_repository = CartRepository()
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticatedPermission])
 def user_add_to_cart_view(request, slug: str):

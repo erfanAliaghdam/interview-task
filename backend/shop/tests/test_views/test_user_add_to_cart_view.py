@@ -15,13 +15,13 @@ class ProductAddToCartViewTest(BaseAPITestClass):
 
     def test_if_unauthorized_user_cannot_access_returns_401(self):
         self.client.logout()
-        result = self.client.get(self.url)
+        result = self.client.post(self.url)
         self.assertEqual(result.status_code, 401)
         self.assertEqual(result.data["status"], "failed")
         self.assertEqual(result.data["message"], "Please login.")
 
     def test_if_user_can_add_to_cart_successfully_returns_200(self):
-        result = self.client.get(self.url)
+        result = self.client.post(self.url)
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.data["status"], "success")
         self.assertEqual(
@@ -31,7 +31,7 @@ class ProductAddToCartViewTest(BaseAPITestClass):
     def test_if_out_of_stock_product_returns_412(self):
         self.product.stock = 0
         self.product.save()
-        result = self.client.get(self.url)
+        result = self.client.post(self.url)
         self.assertEqual(result.status_code, 412)
         self.assertEqual(result.data["status"], "failed")
         self.assertEqual(result.data["message"], "product is out of stock.")

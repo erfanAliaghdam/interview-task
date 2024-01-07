@@ -14,7 +14,7 @@ product_repository = ProductRepository()
 cart_service = CartService()
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticatedPermission])
 def user_decrease_cart_quantity_view(request, slug: str):
