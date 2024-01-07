@@ -33,11 +33,22 @@ def generate_development_seed():
         "!!! client user email for development environment: ", client_user.email, " !!!"
     )
     print(
-        "!!! support user password for development environment: ",
+        "!!! client user password for development environment: ",
         default_password,
         " !!!",
     )
+    seller_user = UserFactory.create(assign_to_group="Sale", email="seller@example.com")
+    seller_user.set_password(default_password)
+    seller_user.save()
 
+    print(
+        "!!! seller user email for development environment: ", seller_user.email, " !!!"
+    )
+    print(
+        "!!! seller user password for development environment: ",
+        default_password,
+        " !!!",
+    )
     print(str(get_user_model().objects.all().count()), "users created. ")
 
     ProductFactory.create_batch(5, stock=0)

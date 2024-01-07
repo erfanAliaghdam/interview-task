@@ -1,13 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from user.adminsites import (
-    ClientUserAdmin,
-    AdminUserAdmin,
-)
-from user.models.proxy import ClientProxyModel, AdminProxyModel
+from user.adminsites import ClientUserAdmin, AdminUserAdmin, SellerUserAdmin
+from user.models.proxy import ClientProxyModel, AdminProxyModel, SellerProxyModel
 
 admin.site.register(ClientProxyModel, ClientUserAdmin)
 admin.site.register(AdminProxyModel, AdminUserAdmin)
+admin.site.register(SellerProxyModel, SellerUserAdmin)
 
 
 @admin.register(get_user_model())

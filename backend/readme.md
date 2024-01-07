@@ -27,3 +27,8 @@ superuser :
 client user (Support Group):
 > email: client@example.com
 > password: DefaultPassword
+
+
+Seller user (Support Group):
+> email: seller@example.com
+> password: DefaultPassword
