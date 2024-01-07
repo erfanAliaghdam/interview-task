@@ -8,7 +8,7 @@ from rest_framework.decorators import (
 from rest_framework.response import Response
 from shop.repositories import ProductRepository, CartRepository
 from shop.services import CartService
-from core.permissions import IsAuthenticatedPermission
+from core.permissions.client import IsAuthenticatedActiveClientUserPermission
 
 product_repository = ProductRepository()
 cart_service = CartService()
@@ -17,7 +17,7 @@ cart_repository = CartRepository()
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticatedPermission])
+@permission_classes([IsAuthenticatedActiveClientUserPermission])
 def user_add_to_cart_view(request, slug: str):
     # check if product exists or not
     product = product_repository.get_product_by_slug(slug=slug)

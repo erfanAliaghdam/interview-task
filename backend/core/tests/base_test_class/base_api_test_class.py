@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.test import TestCase
 from django.contrib.auth import get_user_model, authenticate
 from model_bakery import baker
@@ -19,3 +20,10 @@ class BaseAPITestClass(BaseTestClass):
 
     def authenticate_user(self, user):
         self.client.force_authenticate(user)
+
+
+class BaseClientUserAPITestClass(BaseAPITestClass):
+    def setUp(self) -> None:
+        super().setUp()
+        client_group, _ = Group.objects.get_or_create(name="Client")
+        self.user.groups.add(client_group)

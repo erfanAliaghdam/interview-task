@@ -8,7 +8,7 @@ from rest_framework.decorators import (
 from rest_framework.response import Response
 from shop.repositories import ProductRepository
 from shop.services import CartService
-from core.permissions import IsAuthenticatedPermission
+from core.permissions.client import IsAuthenticatedActiveClientUserPermission
 
 product_repository = ProductRepository()
 cart_service = CartService()
@@ -16,7 +16,7 @@ cart_service = CartService()
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticatedPermission])
+@permission_classes([IsAuthenticatedActiveClientUserPermission])
 def user_decrease_cart_quantity_view(request, slug: str):
     product = product_repository.get_product_by_slug(slug=slug)
     if not product:

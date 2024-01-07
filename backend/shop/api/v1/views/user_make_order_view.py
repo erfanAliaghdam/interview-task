@@ -6,7 +6,7 @@ from rest_framework.decorators import (
     authentication_classes,
 )
 from rest_framework.response import Response
-from core.permissions import IsAuthenticatedPermission
+from core.permissions.client import IsAuthenticatedActiveClientUserPermission
 from shop.services.order_service import OrderService
 
 order_service = OrderService()
@@ -19,7 +19,7 @@ order_service = OrderService()
 
 @api_view(["POST"])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticatedPermission])
+@permission_classes([IsAuthenticatedActiveClientUserPermission])
 def user_make_order_view(request):
     # create order items based on cart items, then return response
     order_service.place_order(user_id=request.user.id)

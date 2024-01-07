@@ -1,10 +1,10 @@
 from django.urls import reverse
 from model_bakery import baker
-from core.tests.base_test_class import BaseAPITestClass
+from core.tests.base_test_class import BaseClientUserAPITestClass
 from shop.models import Order, OrderItem
 
 
-class UserOrderListViewTest(BaseAPITestClass):
+class UserOrderListViewTest(BaseClientUserAPITestClass):
     def setUp(self) -> None:
         super().setUp()
         self.url = reverse("orders-list")
@@ -28,3 +28,12 @@ class UserOrderListViewTest(BaseAPITestClass):
             result.data["count"], Order.objects.filter(user=self.user).count()
         )
         self.assertIn("data", result.data)
+
+    def test_if_non_client_user_cannot_access_returns_403(self):
+        self.user.groups.clear()
+        result = self.client.get(self.url)
+        self.assertEqual(result.status_code, 403)
+        self.assertEqual(result.data["status"], "failed")
+        self.assertEqual(
+            result.data["message"], "You are not allowed to do this action."
+        )
