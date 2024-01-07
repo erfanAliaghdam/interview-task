@@ -4,4 +4,5 @@
 
 
 ## postman collection:
-[postman 2.json](https://github.com/erfanAliaghdam/interview-task/files/13851682/postman.2.json)
+
+[postman-collection.json](https://github.com/erfanAliaghdam/interview-task/files/13852749/postman-collection.json)
