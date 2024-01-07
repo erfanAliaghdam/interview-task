@@ -10,7 +10,7 @@ class UserDecreaseQuantityCartViewTest(BaseClientUserAPITestClass):
     def setUp(self) -> None:
         super().setUp()
         self.product = baker.make(Product, stock=10)
-        self.url = reverse("cart-decrease", kwargs={"slug": self.product.slug})
+        self.url = reverse("client-cart-decrease", kwargs={"slug": self.product.slug})
         self.authenticate_user(self.user)
         self.cart = Cart.objects.filter(user_id=self.user.id).first()
         self.cart_items = baker.make(CartItem, cart=self.cart, _quantity=4)
@@ -32,11 +32,11 @@ class UserDecreaseQuantityCartViewTest(BaseClientUserAPITestClass):
         self.assertEqual(result.data["message"], "Please login.")
 
     @patch(
-        "shop.api.v1.views.user_cart_quantity_decrease_view.ProductRepository."
+        "shop.api.v1.views.client.user_cart_quantity_decrease_view.ProductRepository."
         "get_product_by_slug"
     )
     @patch(
-        "shop.api.v1.views.user_cart_quantity_decrease_view.CartService."
+        "shop.api.v1.views.client.user_cart_quantity_decrease_view.CartService."
         "decrease_product_quantity_on_cart_by_user_id_and_product_id"
     )
     def test_if_user_can_add_to_cart_successfully_returns_200(
@@ -52,11 +52,11 @@ class UserDecreaseQuantityCartViewTest(BaseClientUserAPITestClass):
         )
 
     @patch(
-        "shop.api.v1.views.user_cart_quantity_decrease_view.ProductRepository."
+        "shop.api.v1.views.client.user_cart_quantity_decrease_view.ProductRepository."
         "get_product_by_slug"
     )
     @patch(
-        "shop.api.v1.views.user_cart_quantity_decrease_view.CartService."
+        "shop.api.v1.views.client.user_cart_quantity_decrease_view.CartService."
         "decrease_product_quantity_on_cart_by_user_id_and_product_id"
     )
     def test_if_out_of_stock_product_returns_400(
@@ -72,7 +72,8 @@ class UserDecreaseQuantityCartViewTest(BaseClientUserAPITestClass):
         self.assertEqual(result.data["message"], "product not found.")
 
     @patch(
-        "shop.api.v1.views.user_cart_quantity_decrease_view.ProductRepository.get_product_by_slug"
+        "shop.api.v1.views.client.user_cart_quantity_decrease_view."
+        "ProductRepository.get_product_by_slug"
     )
     def test_if_not_found_product_returns_404(self, product_mock):
         product_mock.return_value = None

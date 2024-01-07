@@ -8,7 +8,7 @@ class ProductAddToCartViewTest(BaseClientUserAPITestClass):
     def setUp(self) -> None:
         super().setUp()
         self.product = baker.make(Product, stock=10)
-        self.url = reverse("cart-add", kwargs={"slug": self.product.slug})
+        self.url = reverse("client-cart-add", kwargs={"slug": self.product.slug})
         self.authenticate_user(self.user)
         self.cart = Cart.objects.filter(user_id=self.user.id).first()
         self.cart_items = baker.make(CartItem, cart=self.cart, _quantity=4)

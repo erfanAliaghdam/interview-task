@@ -7,7 +7,7 @@ from shop.models import Cart, CartItem
 class UserCartListViewTest(BaseClientUserAPITestClass):
     def setUp(self) -> None:
         super().setUp()
-        self.url = reverse("cart-list")
+        self.url = reverse("client-cart-list")
         self.authenticate_user(self.user)
         self.cart = Cart.objects.filter(user_id=self.user.id).first()
         self.cart_items = baker.make(CartItem, cart=self.cart, _quantity=4)

@@ -27,3 +27,10 @@ class BaseClientUserAPITestClass(BaseAPITestClass):
         super().setUp()
         client_group, _ = Group.objects.get_or_create(name="Client")
         self.user.groups.add(client_group)
+
+
+class BaseSellerUserAPITestClass(BaseAPITestClass):
+    def setUp(self) -> None:
+        super().setUp()
+        seller_group, _ = Group.objects.get_or_create(name="Sale")
+        self.user.groups.add(seller_group)

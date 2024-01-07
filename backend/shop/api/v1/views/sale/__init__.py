@@ -1,0 +1,1 @@
+from .user_create_product_view import product_create_view

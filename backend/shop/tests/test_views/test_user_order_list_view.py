@@ -7,7 +7,7 @@ from shop.models import Order, OrderItem
 class UserOrderListViewTest(BaseClientUserAPITestClass):
     def setUp(self) -> None:
         super().setUp()
-        self.url = reverse("orders-list")
+        self.url = reverse("client-orders-list")
         self.authenticate_user(self.user)
         self.order = baker.make(Order, user_id=self.user.id)
         self.order_items = baker.make(OrderItem, order=self.order, _quantity=4)

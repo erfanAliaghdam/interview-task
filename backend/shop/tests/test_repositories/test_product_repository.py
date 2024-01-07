@@ -100,3 +100,12 @@ class ProductRepositoryTest(TestCase):
         self.assertEqual(get_all_products_mock.call_count, 4)
         self.assertEqual(filter_by_in_stock_mock.call_count, 2)
         self.assertEqual(filter_by_search_term_mock.call_count, 2)
+
+    def test_create_product_successfully(self):
+        product = self.repository.create_product(
+            title="test", description="test", price=1, stock=1
+        )
+        self.assertEqual(product.title, "test")
+        self.assertEqual(product.description, "test")
+        self.assertEqual(product.price, 1)
+        self.assertEqual(product.stock, 1)

@@ -7,7 +7,7 @@ from core.tests.base_test_class import BaseAPITestClass
 class LoginClientUserViewTest(BaseAPITestClass):
     def setUp(self) -> None:
         super().setUp()
-        self.url = reverse("login-client")
+        self.url = reverse("login-user")
         self.valid_data = {"email": self.user.email, "password": self.user_password}
         self.invalid_data = {"invalid": "invalid"}
 

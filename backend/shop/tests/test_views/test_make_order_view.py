@@ -8,7 +8,7 @@ from shop.models import Cart, CartItem
 class UserMakeOrderViewTest(BaseClientUserAPITestClass):
     def setUp(self) -> None:
         super().setUp()
-        self.url = reverse("cart-order")
+        self.url = reverse("client-cart-order")
         self.authenticate_user(self.user)
         self.cart = Cart.objects.filter(user_id=self.user.id).first()
         self.cart_items = baker.make(CartItem, cart=self.cart, _quantity=4)
@@ -29,7 +29,7 @@ class UserMakeOrderViewTest(BaseClientUserAPITestClass):
         self.assertEqual(result.data["status"], "failed")
         self.assertEqual(result.data["message"], "Please login.")
 
-    @patch("shop.api.v1.views.user_make_order_view.OrderService" ".place_order")
+    @patch("shop.api.v1.views.client.user_make_order_view.OrderService" ".place_order")
     def test_if_authorized_user_can_place_order_successfully_returns_200(
         self, place_order_mock
     ):

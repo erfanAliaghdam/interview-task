@@ -1,3 +1,4 @@
+from _decimal import Decimal
 from typing import List
 from shop.models import Product
 
@@ -40,3 +41,9 @@ class ProductRepository:
                 queryset=all_products, in_stock=in_stock
             )
         return all_products
+
+    def create_product(self, title: str, description: str, price: Decimal, stock: int):
+        product = Product.objects.create(
+            title=title, description=description, price=price, stock=stock
+        )
+        return product

@@ -13,7 +13,7 @@ from rest_framework.decorators import (
 @api_view(["POST"])
 @authentication_classes([])
 @permission_classes([])
-def login_client_user_view(request):
+def login_user_view(request):
     """
     input data:
         {
